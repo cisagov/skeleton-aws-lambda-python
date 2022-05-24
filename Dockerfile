@@ -18,28 +18,35 @@ LABEL org.opencontainers.image.vendor="Cyber and Infrastructure Security Agency"
 ENV BUILD_PY_VERSION=$PY_VERSION
 ENV BUILD_FILE_NAME=$FILE_NAME
 
-WORKDIR /var/task
+WORKDIR ${LAMBDA_TASK_ROOT}
 RUN mkdir build output
-WORKDIR build
 
 # We need the zip utility to create a deployment package archive.
-RUN yum install -y zip
+RUN yum update -y \
+  && yum install -y zip \
+  && yum clean all
 
 # Install the Python packages necessary to build a deployment package.
-RUN python3 -m pip install --no-cache-dir --upgrade \
-  pip \
-  setuptools \
-  wheel
-RUN python3 -m pip install --no-cache-dir --upgrade pipenv
+RUN python3 -m pip install --no-cache-dir \
+    pip \
+    setuptools \
+    wheel \
+  && python3 -m pip install --no-cache-dir pipenv
 
 # Copy in the build files.
-COPY src/build_artifact.sh build_artifact.sh
-COPY src/lambda_handler.py lambda_handler.py
-COPY src/py$PY_VERSION/ .
+COPY src/build_artifact.sh build
+COPY src/py$PY_VERSION/ build
+COPY src/lambda_handler.py .
 
-# Set up the application's Python virtualenv and verify.
-RUN pipenv install --site-packages
-RUN pipenv check
+# Get a pip-friendly requirements file from our managed Pipfile.
+WORKDIR ${LAMBDA_TASK_ROOT}/build
+RUN pipenv requirements --hash > requirements.txt
 
-# Generate an deployment package artifact from the virtualenv.
-ENTRYPOINT ["./build_artifact.sh"]
+# Install the Lambda's requirements into the task root directory.
+WORKDIR ${LAMBDA_TASK_ROOT}
+RUN python3 -m pip install --no-cache-dir \
+  --target . \
+  --requirement build/requirements.txt
+
+# Start with our handler.
+CMD ["lambda_handler.handler"]

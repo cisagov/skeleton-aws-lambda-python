@@ -2,8 +2,14 @@
 version: '3.2'
 
 services:
-  build_example_aws_lambda:
+  build_deployment_package:
     build: .
-    image: "cisagov/build_example_aws_lambda"
+    image: "cisagov/example_lambda"
+    entrypoint: ./build/build_artifact.sh
     volumes:
       - .:/var/task/output
+  run_lambda_locally:
+    build: .
+    image: "cisagov/example_lambda"
+    ports:
+      - "9000:8080"
