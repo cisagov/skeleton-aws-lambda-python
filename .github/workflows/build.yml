@@ -98,3 +98,36 @@ jobs:
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
+  build:
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      matrix:
+        # Python runtime versions supported by AWS
+        python-version:
+          - "3.7"
+          - "3.8"
+          - "3.9"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get the short SHA for the commit being used
+        run: |
+          echo "GH_SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Build the base Lambda Docker image
+        run: |
+          docker compose build \
+            --build-arg PY_VERSION=${{ matrix.python-version }} \
+            --build-arg FILE_NAME=${{ github.event.repository.name }} \
+            build_deployment_package
+      - name: Generate the Lambda deployment package
+        run: docker compose up build_deployment_package
+      - name: Upload the generated Lambda deployment package as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "${{ github.event.repository.name }}-\
+            py${{ matrix.python-version }}-\
+            ${{ env.GH_SHORT_SHA }}"
+          path: "${{ github.event.repository.name }}.zip"
+      - name: Setup tmate debug session
+        uses: mxschmitt/action-tmate@v3
+        if: env.RUN_TMATE
