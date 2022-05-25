@@ -11,7 +11,7 @@ ARG FILE_NAME=example
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
 # Note: Additional labels are added by the build workflow.
 LABEL org.opencontainers.image.authors="nicholas.mcdonnell@cisa.dhs.gov"
-LABEL org.opencontainers.image.vendor="Cyber and Infrastructure Security Agency"
+LABEL org.opencontainers.image.vendor="Cybersecurity and Infrastructure Security Agency"
 
 # Bring the command line ARGs into the environment so they are available
 # in the built image.
