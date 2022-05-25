@@ -41,7 +41,7 @@ repos:
         args:
           - --autofix
         # Exclude all Pipfile.lock files
-        # exclude: .*/Pipfile\.lock$
+        exclude: .*/Pipfile\.lock$
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 
@@ -130,10 +130,22 @@ repos:
       - id: shellcheck
 
   # Python hooks
+  # Run bandit on the tests directory with a custom configuration
   - repo: https://github.com/PyCQA/bandit
     rev: 1.9.4
     hooks:
       - id: bandit
+        name: bandit (tests directory)
+        files: tests
+        args:
+          - --config=.bandit.yml
+  # Run bandit on everything but the tests directory
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.4
+    hooks:
+      - id: bandit
+        name: bandit (everything but the tests directory)
+        exclude: tests
   - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 26.5.1
     hooks:
