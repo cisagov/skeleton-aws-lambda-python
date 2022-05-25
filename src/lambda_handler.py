@@ -65,16 +65,17 @@ def task_divide(event) -> dict[str, Union[Optional[float], bool]]:
         failed_task(result, error_msg)
     else:
         try:
+            variable_error_msg = "numerator: %s, denominator: %s"
             result["result"] = example_div(int(numerator), int(denominator))
         except ValueError:
             error_msg = "The provided values must be integers."
             logging.error(error_msg)
-            logging.error("%s - %s", numerator, denominator)
+            logging.error(variable_error_msg, numerator, denominator)
             failed_task(result, error_msg)
         except ZeroDivisionError:
             error_msg = "The denominator cannot be zero."
             logging.error(error_msg)
-            logging.error("%s - %s", numerator, denominator)
+            logging.error(variable_error_msg, numerator, denominator)
             failed_task(result, error_msg)
 
     return result
