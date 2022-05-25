@@ -22,8 +22,8 @@ WORKDIR ${LAMBDA_TASK_ROOT}
 RUN mkdir build output
 
 # We need the zip utility to create a deployment package archive.
-RUN yum update -y \
-  && yum install -y zip \
+RUN yum update --assumeyes \
+  && yum install --assumeyes zip \
   && yum clean all
 
 # Install the Python packages necessary to build a deployment package.
