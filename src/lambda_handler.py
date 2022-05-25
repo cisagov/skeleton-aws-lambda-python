@@ -84,7 +84,7 @@ def task_divide(event) -> dict[str, Union[Optional[float], bool]]:
 def handler(event, context) -> dict[str, Optional[str]]:
     """Process the event and generate a response.
 
-    The event should have a task member that is one of the supported tasks
+    The event should have a task member that is one of the supported tasks.
 
     :param event: The event dict that contains the parameters sent when the function
                   is invoked.
@@ -98,7 +98,7 @@ def handler(event, context) -> dict[str, Optional[str]]:
 
     result: dict[str, Any]
     if not callable(task):
-        logging.error("Provided task it not a callable.")
+        logging.error("Provided task is not a callable.")
         logging.error(task)
         result = task_default(event)
     else:
