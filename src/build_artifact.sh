@@ -12,4 +12,7 @@ artifact_path="$output_directory/$ARTIFACT_FILE_NAME"
 # Build the deployment package by zipping the libraries and handler. We
 # explicitly exclude the build/ and output/ subdirectories as they are
 # not part of the deployment package.
-cd "${LAMBDA_TASK_ROOT}" && zip -rq9 "$artifact_path" . -x "build/*" -x "output/*"
+cd "${LAMBDA_TASK_ROOT}" \
+  && zip --recurse-paths --quiet -9 "$artifact_path" . \
+    --exclude "build/*" \
+    --exclude "output/*"
