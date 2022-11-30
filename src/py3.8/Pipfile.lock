@@ -26,11 +26,10 @@
     },
     "cowsay": {
       "hashes": [
-        "sha256:2594b11d6624fff4bf5147b6bdd510ada54a7b5b4e3f2b15ac2a6d3cf99e0bf8",
-        "sha256:a9e1e5f957054010b7faa6406deb5f6aa5cb674498118bbbed0151f92c2dc20e"
+        "sha256:c00e02444f5bc7332826686bd44d963caabbaba9a804a63153822edce62bbbf3"
       ],
       "index": "pypi",
-      "version": "==4.0"
+      "version": "==5.0"
     },
     "docopt": {
       "hashes": [
@@ -54,11 +53,11 @@
     },
     "setuptools": {
       "hashes": [
-        "sha256:68e45d17c9281ba25dc0104eadd2647172b3472d9e01f911efa57965e8d51a36",
-        "sha256:a43bdedf853c670e5fed28e5623403bad2f73cf02f9a2774e91def6bda8265a7"
+        "sha256:57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54",
+        "sha256:a7620757bf984b58deaf32fc8a4577a9bbc0850cf92c20e1ce41c38c19e5fb75"
       ],
       "markers": "python_version >= '3.7'",
-      "version": "==62.3.2"
+      "version": "==65.6.3"
     }
   },
   "develop": {}
