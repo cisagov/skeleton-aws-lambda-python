@@ -9,6 +9,7 @@ on:
 
 env:
   CURL_CACHE_DIR: ~/.cache/curl
+  DEFAULT_ARTIFACT_NAME: lambda_build.zip
   PIP_CACHE_DIR: ~/.cache/pip
   PRE_COMMIT_CACHE_DIR: ~/.cache/pre-commit
   RUN_TMATE: ${{ secrets.RUN_TMATE }}
@@ -153,7 +154,6 @@ jobs:
         run: |
           docker compose build \
             --build-arg PY_VERSION=${{ matrix.python-version }} \
-            --build-arg FILE_NAME=${{ github.event.repository.name }} \
             build_deployment_package
       - name: Generate the Lambda deployment package
         run: docker compose up build_deployment_package
@@ -163,7 +163,7 @@ jobs:
           name: "${{ github.event.repository.name }}-\
             py${{ matrix.python-version }}-\
             ${{ env.GH_SHORT_SHA }}"
-          path: "${{ github.event.repository.name }}.zip"
+          path: "${{ env.DEFAULT_ARTIFACT_NAME }}"
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
