@@ -22,6 +22,7 @@ defaults:
     shell: bash -Eueo pipefail -x {0}
 
 env:
+  DEFAULT_ARTIFACT_NAME: lambda_build.zip
   PIP_CACHE_DIR: ~/.cache/pip
   PRE_COMMIT_CACHE_DIR: ~/.cache/pre-commit
   RUN_TMATE: ${{ secrets.RUN_TMATE }}
@@ -189,25 +190,54 @@ jobs:
         if: env.RUN_TMATE
   test:
     runs-on: ubuntu-latest
-    needs: lint
+    needs:
+      - diagnostics
+      - lint
     steps:
-      - id: setup-env
-        uses: cisagov/setup-env-github-action@develop
-      - uses: actions/checkout@v3
-      - id: setup-python
-        uses: actions/setup-python@v3
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
         with:
-          python-version: "3.10"
-      - uses: actions/cache@v3
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-generic#207 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - id: setup-env
+        uses: cisagov/setup-env-github-action@v2
+      - uses: actions/checkout@v7
+      - id: setup-python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ steps.setup-env.outputs.python-version }}
+      - uses: actions/cache@v6
         env:
           BASE_CACHE_KEY: "${{ github.job }}-${{ runner.os }}-\
             py${{ steps.setup-python.outputs.python-version }}-"
         with:
           path: |
             ${{ env.PIP_CACHE_DIR }}
-          key: "${{ env.BASE_CACHE_KEY }}\
-            ${{ hashFiles('**/requirements-test.txt') }}-\
-            ${{ hashFiles('**/requirements.txt') }}"
+          key: >-
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements-test.txt',
+            '**/requirements.txt') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Install dependencies
@@ -224,35 +254,47 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs:
+      - diagnostics
       - lint
       - test
-    strategy:
-      matrix:
-        # Python runtime versions supported by AWS
-        python-version:
-          - "3.7"
-          - "3.8"
-          - "3.9"
     steps:
-      - uses: actions/checkout@v2
-      - name: Get the short SHA for the commit being used
-        run: |
-          echo "GH_SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
+        with:
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-generic#207 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - uses: actions/checkout@v7
       - name: Build the base Lambda Docker image
         run: |
-          docker compose build \
-            --build-arg PY_VERSION=${{ matrix.python-version }} \
-            --build-arg FILE_NAME=${{ github.event.repository.name }} \
-            build_deployment_package
+          docker compose build build_deployment_package
       - name: Generate the Lambda deployment package
         run: docker compose up build_deployment_package
       - name: Upload the generated Lambda deployment package as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
-          name: "${{ github.event.repository.name }}-\
-            py${{ matrix.python-version }}-\
-            ${{ env.GH_SHORT_SHA }}"
-          path: "${{ github.event.repository.name }}.zip"
+          archive: false
+          path: ${{ env.DEFAULT_ARTIFACT_NAME }}
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE

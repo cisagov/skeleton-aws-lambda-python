@@ -2,6 +2,9 @@
 # Files already tracked by Git are not affected.
 # See: https://git-scm.com/docs/gitignore
 
+## Project Specific ##
+lambda_build.zip
+
 ## Python ##
 __pycache__
 .mypy_cache

@@ -5,8 +5,13 @@ services:
   build_deployment_package:
     build: .
     image: "cisagov/example_lambda"
-    entrypoint: ./build/build_artifact.sh
+    entrypoint: /opt/build_artifact.sh
+    environment:
+      # This uses the value of the BUILD_FILE_NAME environment variable
+      # from the invoking environment but falls back to a default value.
+      - BUILD_FILE_NAME=${BUILD_FILE_NAME:-lambda_build.zip}
     volumes:
+      - ./src/build_artifact.sh:/opt/build_artifact.sh
       - .:/var/task/output
   run_lambda_locally:
     build: .
