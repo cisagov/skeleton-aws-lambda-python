@@ -29,21 +29,21 @@ RUN python3 -m pip install --no-cache-dir \
     pip \
     setuptools \
     wheel \
-  && python3 -m pip install --no-cache-dir pipenv
+  # This version of pipenv is the minimum version to allow passing arguments
+  # to pip with the --extra-pip-args option.
+  && python3 -m pip install --no-cache-dir "pipenv>=2022.9.8"
 
 # Copy in the build files.
 COPY src/py$PY_VERSION/ build
 COPY src/lambda_handler.py .
 
-# Get a pip-friendly requirements file from our managed Pipfile.
+# Install the Lambda dependencies.
+#
+# The --extra-pip-args option is used to pass necessary arguments to the
+# underlying pip calls.
 WORKDIR ${LAMBDA_TASK_ROOT}/build
-RUN pipenv requirements --hash > requirements.txt
+RUN pipenv sync --extra-pip-args="--no-cache-dir --target .."
 
-# Install the Lambda's requirements into the task root directory.
+# Ensure our handler is invoked when the image is used.
 WORKDIR ${LAMBDA_TASK_ROOT}
-RUN python3 -m pip install --no-cache-dir \
-  --target . \
-  --requirement build/requirements.txt
-
-# Start with our handler.
 CMD ["lambda_handler.handler"]
