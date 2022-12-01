@@ -23,7 +23,7 @@ COPY src/py$PY_VERSION/ .
 #
 # The --extra-pip-args option is used to pass necessary arguments to the
 # underlying pip calls.
-RUN pipenv sync --extra-pip-args="--no-cache-dir --target ${LAMBDA_TASK_ROOT}"
+RUN pipenv sync --system --extra-pip-args="--no-cache-dir --target ${LAMBDA_TASK_ROOT}"
 
 FROM amazon/aws-lambda-python:$PY_VERSION as build-stage
 
