@@ -36,7 +36,7 @@ This will output the deployment zip file in the root directory.
 ## Running the Lambda locally ##
 
 The configuration in this repository allows you run the Lambda locally for
-testing as long as you do not need explicit permissions for other AWS
+testing as long as you do not require explicit permissions for other AWS
 services. This can be done with the following command:
 
 ```console
