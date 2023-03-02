@@ -3,6 +3,7 @@
 # Standard Python Libraries
 from datetime import datetime, timezone
 import logging
+import os
 from typing import Any, Optional, Union
 
 # Third-Party Libraries
@@ -12,8 +13,9 @@ import cowsay.characters
 # cisagov Libraries
 from example import example_div
 
+default_log_level = "INFO"
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(default_log_level)
 
 
 def failed_task(result: dict[str, Any], error_msg: str) -> None:
@@ -91,7 +93,21 @@ def handler(event, context) -> dict[str, Optional[str]]:
     :param context: The context in which the function is called.
     :return: The result of the action.
     """
+    old_log_level = None
     response: dict[str, Optional[str]] = {"timestamp": str(datetime.now(timezone.utc))}
+
+    # Update the logging level if necessary
+    new_log_level = os.environ.get("log_level", default_log_level).upper()
+    if not isinstance(logging.getLevelName(new_log_level), int):
+        logging.warning(
+            "Invalid logging level %s. Using %s instead.",
+            new_log_level,
+            default_log_level,
+        )
+        new_log_level = default_log_level
+    if logging.getLogger().getEffectiveLevel() != logging.getLevelName(new_log_level):
+        old_log_level = logging.getLogger().getEffectiveLevel()
+        logging.getLogger().setLevel(new_log_level)
 
     task_name = f"task_{event.get('task')}"
     task = globals().get(task_name, task_default)
@@ -103,6 +119,9 @@ def handler(event, context) -> dict[str, Optional[str]]:
         result = task_default(event)
     else:
         result = task(event)
-
     response.update(result)
+
+    if old_log_level is not None:
+        logging.getLogger().setLevel(old_log_level)
+
     return response
