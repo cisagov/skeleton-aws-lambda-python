@@ -109,7 +109,9 @@ jobs:
       - id: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          # This version should match the Python version in the AWS Lambda
+          # runtime being used.
+          python-version: "3.9"
       - uses: actions/cache@v3
         env:
           BASE_CACHE_KEY: "${{ github.job }}-${{ runner.os }}-\
@@ -122,14 +124,23 @@ jobs:
             ${{ hashFiles('**/requirements.txt') }}"
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
-      - name: Install dependencies
+      - name: Install core dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           pip install --upgrade --requirement requirements-test.txt
+      # We need to install them into the system pip environment because pipenv
+      # will try to create a Python virtual environment by default if it does
+      # not detect that it is already in one.
+      - name: Install Lambda dependencies
+        run: pipenv sync --system
       - name: Run tests
         env:
           GITHUB_RELEASE_TAG: ${{ github.event.release.tag_name }}
-        run: pytest
+        # This is necessary to automatically load the local directory into
+        # `sys.path``. This is necessary to see the Lambda's package since it
+        # is not installed into the local `pip` environment Please see:
+        # https://docs.pytest.org/en/7.1.x/explanation/pythonpath.html#invoking-pytest-versus-python-m-pytest
+        run: python -m pytest
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE

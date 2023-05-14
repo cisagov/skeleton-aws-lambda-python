@@ -97,6 +97,21 @@ Once you are finished you can stop the detached container with the following com
 docker compose down
 ```
 
+## Testing the Lambda ##
+
+> **Warning**
+> If testing with the [pytest] tests you should invoke [pytest] using
+> `python -m pytest`. This is the easiest way to get the working directory
+> into `sys.path` for package discovery.
+
+If you want to test the Lambda by running it locally, and it requires
+privileged access to resources (AWS or otherwise), then you must load that data
+into the Docker container by modifying the composition in this project. The
+easiest approach is to simply add suitable environment variables. However, you
+can also load configuration files as needed in the same way that the
+`build_artifact.sh` script is added in the `build_deployment_package` service
+configuration.
+
 ## New Repositories from a Skeleton ##
 
 Please see our [Project Setup guide](https://github.com/cisagov/development-guide/tree/develop/project_setup)
@@ -121,3 +136,5 @@ dedication](https://creativecommons.org/publicdomain/zero/1.0/).
 All contributions to this project will be released under the CC0
 dedication. By submitting a pull request, you are agreeing to comply
 with this waiver of copyright interest.
+
+[pytest]: https://github.com/pytest-dev/pytest
