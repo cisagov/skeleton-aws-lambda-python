@@ -4,11 +4,45 @@
 
 This is a generic skeleton project that can be used to quickly get a
 new [cisagov](https://github.com/cisagov) GitHub
-[AWS Lambda](https://aws.amazon.com/lambda/) project using the Python runtimes
+[AWS Lambda](https://aws.amazon.com/lambda/) project using a Python runtime
 started. This skeleton project contains [licensing information](LICENSE), as
 well as [pre-commit hooks](https://pre-commit.com) and
 [GitHub Actions](https://github.com/features/actions) configurations
 appropriate for the major languages that we use.
+
+## Managing dependencies ##
+
+The Python dependencies are maintained using a [Pipenv](https://github.com/pypa/pipenv)
+configuration and changes to requirements should be made by editing the
+`Pipfile` in the project. More information about the `Pipfile` format can be
+found [here](https://pipenv.pypa.io/en/latest/basics/#example-pipfile-pipfile-lock).
+The accompanying `Pipfile.lock` file contains the specific dependency versions
+that will be installed.
+
+### Updating ###
+
+Once the `Pipfile` is appropriately configured you can update the dependencies
+using the following:
+
+```console
+pipenv lock
+```
+
+This command should also be used to update the pinned version of the project
+dependencies.
+
+### Installation ###
+
+Development requires that this project's dependencies are installed into the
+local Python virtual environment. You can do this with the following:
+
+```console
+pipenv sync
+```
+
+> **Note**
+> You should update the `Pipfile`, re-lock the dependencies, and then sync when
+> you need to update the dependency configuration.
 
 ## Building the base Lambda image ##
 
@@ -61,21 +95,6 @@ Once you are finished you can stop the detached container with the following com
 
 ```console
 docker compose down
-```
-
-## How to update Python dependencies ##
-
-The Python dependencies are maintained using a [Pipenv](https://github.com/pypa/pipenv)
-configuration for each supported AWS Lambda Python runtime. Changes to requirements
-should be made to the respective `runtimes/<runtime>/Pipfile` file. More
-information about the `Pipfile` format can be found [here](https://pipenv.pypa.io/en/latest/basics/#example-pipfile-pipfile-lock).
-The accompanying `Pipfile.lock` files contain the specific dependency versions
-that will be installed. These files can be updated like so (using the Python
-3.9 runtime configuration as an example):
-
-```console
-cd runtimes/python3.9
-pipenv lock
 ```
 
 ## New Repositories from a Skeleton ##

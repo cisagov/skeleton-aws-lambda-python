@@ -13,7 +13,7 @@ services:
       # from the invoking environment but falls back to a default value.
       - BUILD_FILE_NAME=${BUILD_FILE_NAME:-lambda_build.zip}
     volumes:
-      - ./build/build_artifact.sh:/opt/build_artifact.sh
+      - ./build_artifact.sh:/opt/build_artifact.sh
       - .:/var/task/output
   run_lambda_locally:
     build: .
