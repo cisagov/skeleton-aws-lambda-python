@@ -50,8 +50,8 @@ COPY --from=install-stage ${LAMBDA_TASK_ROOT} ${LAMBDA_TASK_ROOT}
 
 WORKDIR ${LAMBDA_TASK_ROOT}
 
-# Copy in the handler.
-COPY src/lambda_handler.py .
+# Copy in any Lambda packages.
+COPY src/ ./
 
 # Ensure our handler is invoked when the image is used.
-CMD ["lambda_handler.handler"]
+CMD ["cisagov_lambda.handler"]
