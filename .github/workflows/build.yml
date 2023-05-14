@@ -121,7 +121,8 @@ jobs:
             ${{ env.PIP_CACHE_DIR }}
           key: "${{ env.BASE_CACHE_KEY }}\
             ${{ hashFiles('**/requirements-test.txt') }}-\
-            ${{ hashFiles('**/requirements.txt') }}"
+            ${{ hashFiles('**/requirements.txt') }}-\
+            ${{ hashFiles('Pipfile.lock') }}"
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Install core dependencies
