@@ -1,3 +1,4 @@
+# This value should align with the AWS Lambda Python runtime you want to use.
 ARG PY_VERSION=3.9
 
 FROM amazon/aws-lambda-python:$PY_VERSION as install-stage
@@ -17,7 +18,7 @@ RUN python3 -m pip install --no-cache-dir \
 WORKDIR /tmp
 
 # Copy in the dependency files.
-COPY runtimes/python$PY_VERSION/ .
+COPY Pipfile Pipfile.lock .
 
 # Install the Lambda dependencies.
 #
@@ -51,7 +52,7 @@ COPY --from=install-stage ${LAMBDA_TASK_ROOT} ${LAMBDA_TASK_ROOT}
 WORKDIR ${LAMBDA_TASK_ROOT}
 
 # Copy in any Lambda packages.
-COPY src/ ./
+COPY cisagov_lambda/ ./cisagov_lambda/
 
 # Ensure our handler is invoked when the image is used.
 CMD ["cisagov_lambda.handler"]
