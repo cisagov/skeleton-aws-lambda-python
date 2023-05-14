@@ -49,7 +49,13 @@ You can then invoke the Lambda using the following:
 ```
 
 The `{}` in the command is the invocation event payload to send to the Lambda
-and would be the value given as the `event` argument to the handler.
+and would be the value given as the `event` argument to the handler. Sample
+events can be found in the `events/` directory. If you wish to invoke the
+Lambda using one of these then you would use the following:
+
+```console
+ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d @events/<sample event>.json
+```
 
 Once you are finished you can stop the detached container with the following command:
 
