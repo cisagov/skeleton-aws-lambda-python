@@ -17,7 +17,7 @@ RUN python3 -m pip install --no-cache-dir \
 WORKDIR /tmp
 
 # Copy in the dependency files.
-COPY src/py$PY_VERSION/ .
+COPY runtimes/python$PY_VERSION/ .
 
 # Install the Lambda dependencies.
 #
