@@ -7,5 +7,7 @@ lambda_build.zip
 
 ## Python ##
 __pycache__
+.coverage
 .mypy_cache
+.pytest_cache
 .python-version
