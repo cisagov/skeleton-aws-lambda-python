@@ -42,6 +42,11 @@ updates:
     schedule:
       interval: "weekly"
 
+  - package-ecosystem: "pip"
+    directory: "/src/py3.10"
+    schedule:
+      interval: "weekly"
+
   - package-ecosystem: "terraform"
     directory: "/"
     schedule:
