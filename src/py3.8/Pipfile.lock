@@ -1,64 +1,66 @@
 {
-  "_meta": {
-    "hash": {
-      "sha256": "e7d647bd6df129d143384648900fa34961e527257ff08634f04b9badb5fd87f4"
+    "_meta": {
+        "hash": {
+            "sha256": "e7d647bd6df129d143384648900fa34961e527257ff08634f04b9badb5fd87f4"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.8"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
     },
-    "pipfile-spec": 6,
-    "requires": {
-      "python_version": "3.8"
+    "default": {
+        "contextlib2": {
+            "hashes": [
+                "sha256:3fbdb64466afd23abaf6c977627b75b6139a5a3e8ce38405c5b413aed7a0471f",
+                "sha256:ab1e2bfe1d01d968e1b7e8d9023bc51ef3509bba217bb730cee3827e1ee82869"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==21.6.0"
+        },
+        "cowsay": {
+            "hashes": [
+                "sha256:011c067841451ea49baf8ff49c355bd7f659d53fc538459e0a84c12ae2b4e027",
+                "sha256:47445cb273684618a1786db8e8d05ec9258455f7eb74893e5d0933daafeb44ba",
+                "sha256:77b07c508af48aa300a90f3b3c5c013a12360a71fc5c87b1efb763fe2803a775"
+            ],
+            "index": "pypi",
+            "version": "==6.0"
+        },
+        "docopt": {
+            "hashes": [
+                "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"
+            ],
+            "version": "==0.6.2"
+        },
+        "example": {
+            "file": "https://github.com/cisagov/skeleton-python-library/archive/v0.1.0.tar.gz",
+            "hashes": [
+                "sha256:d4ae2105b555cb386daf39e06b05594596e881e67faffc46c69d9e7ce56c8c4c"
+            ],
+            "version": "==0.1.0"
+        },
+        "schema": {
+            "hashes": [
+                "sha256:f06717112c61895cabc4707752b88716e8420a8819d71404501e114f91043197",
+                "sha256:f3ffdeeada09ec34bf40d7d79996d9f7175db93b7a5065de0faa7f41083c1e6c"
+            ],
+            "version": "==0.7.5"
+        },
+        "setuptools": {
+            "hashes": [
+                "sha256:56ee14884fd8d0cd015411f4a13f40b4356775a0aefd9ebc1d3bfb9a1acb32f1",
+                "sha256:eff96148eb336377ab11beee0c73ed84f1709a40c0b870298b0d058828761bae"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==68.2.1"
+        }
     },
-    "sources": [
-      {
-        "name": "pypi",
-        "url": "https://pypi.org/simple",
-        "verify_ssl": true
-      }
-    ]
-  },
-  "default": {
-    "contextlib2": {
-      "hashes": [
-        "sha256:3fbdb64466afd23abaf6c977627b75b6139a5a3e8ce38405c5b413aed7a0471f",
-        "sha256:ab1e2bfe1d01d968e1b7e8d9023bc51ef3509bba217bb730cee3827e1ee82869"
-      ],
-      "markers": "python_version >= '3.6'",
-      "version": "==21.6.0"
-    },
-    "cowsay": {
-      "hashes": [
-        "sha256:c00e02444f5bc7332826686bd44d963caabbaba9a804a63153822edce62bbbf3"
-      ],
-      "index": "pypi",
-      "version": "==5.0"
-    },
-    "docopt": {
-      "hashes": [
-        "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"
-      ],
-      "version": "==0.6.2"
-    },
-    "example": {
-      "file": "https://github.com/cisagov/skeleton-python-library/archive/v0.1.0.tar.gz",
-      "hashes": [
-        "sha256:d4ae2105b555cb386daf39e06b05594596e881e67faffc46c69d9e7ce56c8c4c"
-      ],
-      "version": "==0.1.0"
-    },
-    "schema": {
-      "hashes": [
-        "sha256:f06717112c61895cabc4707752b88716e8420a8819d71404501e114f91043197",
-        "sha256:f3ffdeeada09ec34bf40d7d79996d9f7175db93b7a5065de0faa7f41083c1e6c"
-      ],
-      "version": "==0.7.5"
-    },
-    "setuptools": {
-      "hashes": [
-        "sha256:57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54",
-        "sha256:a7620757bf984b58deaf32fc8a4577a9bbc0850cf92c20e1ce41c38c19e5fb75"
-      ],
-      "markers": "python_version >= '3.7'",
-      "version": "==65.6.3"
-    }
-  },
-  "develop": {}
+    "develop": {}
 }
