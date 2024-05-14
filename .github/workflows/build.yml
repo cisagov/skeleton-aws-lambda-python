@@ -203,11 +203,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install --upgrade --requirement requirements-test.txt
+      - name: Show current Python package environment
+        run: pip list
       # We need to install them into the system pip environment because pipenv
       # will try to create a Python virtual environment by default if it does
       # not detect that it is already in one.
       - name: Install Lambda dependencies
-        run: pipenv sync --system
+        run: pipenv sync --system --verbose
+      - name: Show current Python package environment
+        run: pip list
       - name: Run tests
         env:
           GITHUB_RELEASE_TAG: ${{ github.event.release.tag_name }}
