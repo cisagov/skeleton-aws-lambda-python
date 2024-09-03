@@ -1,6 +1,6 @@
 ARG PY_VERSION=3.9
 
-FROM amazon/aws-lambda-python:$PY_VERSION as install-stage
+FROM amazon/aws-lambda-python:$PY_VERSION AS install-stage
 
 # Declare it a second time so it's brought into this scope.
 ARG PY_VERSION=3.9
@@ -25,7 +25,7 @@ COPY src/py$PY_VERSION/ .
 # underlying pip calls.
 RUN pipenv sync --system --extra-pip-args="--no-cache-dir --target ${LAMBDA_TASK_ROOT}"
 
-FROM amazon/aws-lambda-python:$PY_VERSION as build-stage
+FROM amazon/aws-lambda-python:$PY_VERSION AS build-stage
 
 ###
 # For a list of pre-defined annotation keys and value types see:
