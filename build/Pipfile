@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [requires]
+# This must match the version of the Python runtime specified in the Dockerfile.
 python_version = "3.9"
 
 [packages]
