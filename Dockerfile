@@ -1,3 +1,4 @@
+# The runtime tag must match the version of Python specified in the Pipfile.
 FROM amazon/aws-lambda-python:3.9 AS install-stage
 
 # Install the Python packages necessary to install the Lambda dependencies.
@@ -20,6 +21,7 @@ COPY build/Pipfile build/Pipfile.lock ./
 # underlying pip calls.
 RUN pipenv sync --system --extra-pip-args="--no-cache-dir --target ${LAMBDA_TASK_ROOT}"
 
+# The runtime tag must match the version of Python specified in the Pipfile.
 FROM amazon/aws-lambda-python:3.9 AS build-stage
 
 ###
