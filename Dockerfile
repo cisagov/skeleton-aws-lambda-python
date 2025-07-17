@@ -35,9 +35,6 @@ FROM amazon/aws-lambda-python:3.9 AS build-stage
 LABEL org.opencontainers.image.authors="github@cisa.dhs.gov"
 LABEL org.opencontainers.image.vendor="Cybersecurity and Infrastructure Security Agency"
 
-# This must be present in the image to generate a deployment artifact.
-ENV BUILD_PY_VERSION=3.9
-
 COPY --from=install-stage ${LAMBDA_TASK_ROOT} ${LAMBDA_TASK_ROOT}
 
 WORKDIR ${LAMBDA_TASK_ROOT}
