@@ -77,4 +77,4 @@ version bump:
   - changed-files:
       - any-glob-to-any-file:
           # Ensure this matches your version tracking file(s).
-          - version.txt
+          - src/version.txt
