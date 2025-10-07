@@ -274,7 +274,7 @@ jobs:
           name: "${{ github.event.repository.name }}-\
             py${{ matrix.python-version }}-\
             ${{ env.GH_SHORT_SHA }}"
-          path: "${{ env.DEFAULT_ARTIFACT_NAME }}"
+          path: ${{ env.DEFAULT_ARTIFACT_NAME }}
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
