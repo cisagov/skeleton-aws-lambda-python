@@ -1,4 +1,3 @@
-#!/usr/bin/env pytest -vs
 """Version tests for AWS Lambda Python skeleton project."""
 
 # Standard Python Libraries
