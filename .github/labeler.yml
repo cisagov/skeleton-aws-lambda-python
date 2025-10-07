@@ -58,6 +58,7 @@ test:
           - .isort.cfg
           - .mdl_config.yaml
           - .yamllint
+          - pytest.ini
           - tests/*.py
 typescript:
   - changed-files:
