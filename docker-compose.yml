@@ -21,4 +21,4 @@ services:
     # the invoking environment but falls back to a default value.
     image: cisagov/example_lambda:${LAMBDA_TAG:-latest}
     ports:
-      - "9000:8080"
+      - 9000:8080
