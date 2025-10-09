@@ -6,6 +6,16 @@ https://docs.pytest.org/en/latest/writing_plugins.html#conftest-py-plugins
 # Third-Party Libraries
 import pytest
 
+VERSION_FILE = "src/version.txt"
+
+
+@pytest.fixture(scope="session")
+def project_version():
+    """Return the version of the project."""
+    with open(VERSION_FILE) as f:
+        project_version = f.read().strip()
+    return project_version
+
 
 def pytest_addoption(parser):
     """Add new commandline options to pytest."""
