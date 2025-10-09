@@ -59,13 +59,15 @@ docker compose down
 
 ## How to update Python dependencies ##
 
-The Python dependencies are maintained using a [Pipenv](https://github.com/pypa/pipenv)
-configuration for each supported Python version. Changes to requirements
-should be made to the respective `src/py<Python version>/Pipfile`. More
-information about the `Pipfile` format can be found [here](https://pipenv.pypa.io/en/latest/basics/#example-pipfile-pipfile-lock).
-The accompanying `Pipfile.lock` files contain the specific dependency versions
-that will be installed. These files can be updated like so (using the Python
-3.9 configuration as an example):
+The Python dependencies are maintained using a
+[Pipenv](https://github.com/pypa/pipenv) configuration for each
+supported Python version. Changes to requirements should be made to
+the respective `src/py<Python version>/Pipfile`. More information
+about the `Pipfile` format can be found in the [`pipenv`
+documentation](https://pipenv.pypa.io/en/latest/basics/#example-pipfile-pipfile-lock).
+The accompanying `Pipfile.lock` files contain the specific dependency
+versions that will be installed. These files can be updated like so
+(using the Python 3.9 configuration as an example):
 
 ```console
 cd src/py3.9
