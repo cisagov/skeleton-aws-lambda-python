@@ -7,15 +7,6 @@ import os
 import pytest
 
 GITHUB_RELEASE_TAG = os.getenv("GITHUB_RELEASE_TAG")
-VERSION_FILE = "src/version.txt"
-
-
-@pytest.fixture(scope="session")
-def project_version():
-    """Return the version of the project."""
-    with open(VERSION_FILE) as f:
-        project_version = f.read().strip()
-    return project_version
 
 
 @pytest.mark.skipif(
