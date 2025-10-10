@@ -1,9 +1,5 @@
-ARG PY_VERSION=3.9
-
-FROM amazon/aws-lambda-python:$PY_VERSION AS install-stage
-
-# Declare it a second time so it's brought into this scope.
-ARG PY_VERSION=3.9
+# The runtime tag must match the version of Python specified in the Pipfile.
+FROM amazon/aws-lambda-python:3.9 AS install-stage
 
 # Install the Python packages necessary to install the Lambda dependencies.
 RUN python3 -m pip install --no-cache-dir \
@@ -17,7 +13,7 @@ RUN python3 -m pip install --no-cache-dir \
 WORKDIR /tmp
 
 # Copy in the dependency files.
-COPY src/py$PY_VERSION/ .
+COPY build/Pipfile build/Pipfile.lock ./
 
 # Install the Lambda dependencies.
 #
@@ -25,7 +21,8 @@ COPY src/py$PY_VERSION/ .
 # underlying pip calls.
 RUN pipenv sync --system --extra-pip-args="--no-cache-dir --target ${LAMBDA_TASK_ROOT}"
 
-FROM amazon/aws-lambda-python:$PY_VERSION AS build-stage
+# The runtime tag must match the version of Python specified in the Pipfile.
+FROM amazon/aws-lambda-python:3.9 AS build-stage
 
 ###
 # For a list of pre-defined annotation keys and value types see:
@@ -39,12 +36,6 @@ FROM amazon/aws-lambda-python:$PY_VERSION AS build-stage
 # LABEL org.opencontainers.image.authors="vm-fusion-dev-group@trio.dhs.gov"
 LABEL org.opencontainers.image.authors="github@cisa.dhs.gov"
 LABEL org.opencontainers.image.vendor="Cybersecurity and Infrastructure Security Agency"
-
-# Declare it a third time so it's brought into this scope.
-ARG PY_VERSION=3.9
-
-# This must be present in the image to generate a deployment artifact.
-ENV BUILD_PY_VERSION=$PY_VERSION
 
 COPY --from=install-stage ${LAMBDA_TASK_ROOT} ${LAMBDA_TASK_ROOT}
 
