@@ -16,6 +16,7 @@ dependencies:
   - changed-files:
       - any-glob-to-any-file:
           # Add any dependency files used.
+          - "**/Pipfile*"
           - .pre-commit-config.yaml
           - requirements*.txt
 docker:
