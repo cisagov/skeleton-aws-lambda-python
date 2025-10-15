@@ -39,17 +39,7 @@ updates:
     schedule:
       interval: weekly
 
-  - directory: /src/py3.7
-    package-ecosystem: pip
-    schedule:
-      interval: weekly
-
-  - directory: /src/py3.8
-    package-ecosystem: pip
-    schedule:
-      interval: weekly
-
-  - directory: /src/py3.9
+  - directory: /build
     package-ecosystem: pip
     schedule:
       interval: weekly
