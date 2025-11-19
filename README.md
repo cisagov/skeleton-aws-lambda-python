@@ -1,6 +1,8 @@
 # skeleton-aws-lambda-python #
 
 [![GitHub Build Status](https://github.com/cisagov/skeleton-aws-lambda-python/workflows/build/badge.svg)](https://github.com/cisagov/skeleton-aws-lambda-python/actions)
+[![License](https://img.shields.io/github/license/cisagov/skeleton-aws-lambda-python)](https://spdx.org/licenses/)
+[![CodeQL](https://github.com/cisagov/skeleton-aws-lambda-python/workflows/CodeQL/badge.svg)](https://github.com/cisagov/skeleton-aws-lambda-python/actions/workflows/codeql-analysis.yml)
 
 This is a generic skeleton project that can be used to quickly get a
 new [cisagov](https://github.com/cisagov) GitHub
