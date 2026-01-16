@@ -4,7 +4,7 @@
 from datetime import datetime, timezone
 import logging
 import os
-from typing import Any, Optional, Union
+from typing import Any
 
 # Third-Party Libraries
 import cowsay
@@ -36,9 +36,9 @@ def task_default(event):
     return result
 
 
-def task_cowsay(event) -> dict[str, Union[Optional[str], bool]]:
+def task_cowsay(event) -> dict[str, str | None | bool]:
     """Generate an output message using the provided information."""
-    result: dict[str, Union[Optional[str], bool]] = {"message": None, "success": True}
+    result: dict[str, str | None | bool] = {"message": None, "success": True}
 
     character: str = event.get("character", "tux")
     if character not in cowsay.characters.CHARS.keys():
@@ -55,9 +55,9 @@ def task_cowsay(event) -> dict[str, Union[Optional[str], bool]]:
     return result
 
 
-def task_divide(event) -> dict[str, Union[Optional[float], bool]]:
+def task_divide(event) -> dict[str, float | None | bool]:
     """Divide one number by another and provide the result."""
-    result: dict[str, Union[Optional[float], bool]] = {"result": None, "success": True}
+    result: dict[str, float | None | bool] = {"result": None, "success": True}
     numerator: str = event.get("numerator", None)
     denominator: str = event.get("denominator", None)
 
@@ -83,7 +83,7 @@ def task_divide(event) -> dict[str, Union[Optional[float], bool]]:
     return result
 
 
-def handler(event, context) -> dict[str, Optional[str]]:
+def handler(event, context) -> dict[str, str | None]:
     """Process the event and generate a response.
 
     The event should have a task member that is one of the supported tasks.
@@ -94,7 +94,7 @@ def handler(event, context) -> dict[str, Optional[str]]:
     :return: The result of the action.
     """
     old_log_level = None
-    response: dict[str, Optional[str]] = {"timestamp": str(datetime.now(timezone.utc))}
+    response: dict[str, str | None] = {"timestamp": str(datetime.now(timezone.utc))}
 
     # Update the logging level if necessary
     new_log_level = os.environ.get("log_level", default_log_level).upper()
