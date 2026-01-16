@@ -1,5 +1,9 @@
-# The runtime tag must match the version of Python specified in the Pipfile.
-FROM amazon/aws-lambda-python:3.9 AS install-stage
+# The runtime tag must match the version of Python specified in the
+# Pipfile.
+#
+# Official Docker images are in the form library/<app> while
+# non-official images are in the form <user>/<app>.
+FROM docker.io/amazon/aws-lambda-python:3.9 AS install-stage
 
 # Install the Python packages necessary to install the Lambda dependencies.
 RUN python3 -m pip install --no-cache-dir \
@@ -21,8 +25,12 @@ COPY build/Pipfile build/Pipfile.lock ./
 # underlying pip calls.
 RUN pipenv sync --system --extra-pip-args="--no-cache-dir --target ${LAMBDA_TASK_ROOT}"
 
-# The runtime tag must match the version of Python specified in the Pipfile.
-FROM amazon/aws-lambda-python:3.9 AS build-stage
+# The runtime tag must match the version of Python specified in the
+# Pipfile.
+#
+# Official Docker images are in the form library/<app> while
+# non-official images are in the form <user>/<app>.
+FROM docker.io/amazon/aws-lambda-python:3.9 AS build-stage
 
 ###
 # For a list of pre-defined annotation keys and value types see:
