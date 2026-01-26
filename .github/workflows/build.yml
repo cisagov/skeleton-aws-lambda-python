@@ -390,14 +390,27 @@ jobs:
         run: python -m pip install --upgrade pip setuptools wheel
       - name: Install pipenv
         run: pip install --upgrade pipenv
-      - name: Gemerate SBOM
+      - name: Manipulate the repo name into the preferred format
+        id: manipulate-repo-name
+        run: |
+          NEW_NAME=$(echo "${{ github.repository}}" \
+          | tr '[:upper:]' '[:lower:]' \
+          | tr '/ ' '-')
+          echo "repo-name=${NEW_NAME}" >> $GITHUB_OUTPUT
+      - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          artifact-name: sbom.${{ matrix.sbom-format }}
+          artifact-name: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
+            matrix.sbom-format }}
           file: build/Pipfile.lock
           format: ${{ matrix.sbom-format }}
-          output-file: sbom.${{ matrix.sbom-format }}
+          output-file: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
+            matrix.sbom-format }}
       - name: Attest build provenance for the SBOM
         uses: actions/attest-build-provenance@v3
         with:
-          subject-path: sbom.${{ matrix.sbom-format }}
+          subject-path: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
+            matrix.sbom-format }}
