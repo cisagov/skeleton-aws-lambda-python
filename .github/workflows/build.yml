@@ -386,10 +386,6 @@ jobs:
             ${{ hashFiles('build/pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
-      - name: Update core Python packages
-        run: python -m pip install --upgrade pip setuptools wheel
-      - name: Install pipenv
-        run: pip install --upgrade pipenv
       - name: Manipulate the repo name into the preferred format
         id: manipulate-repo-name
         run: |
