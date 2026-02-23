@@ -9,7 +9,6 @@ FROM docker.io/amazon/aws-lambda-python:3.9 AS install-stage
 RUN python3 -m pip install --no-cache-dir \
     pip \
     setuptools \
-    wheel \
   # This version of pipenv is the minimum version to allow passing arguments
   # to pip with the --extra-pip-args option.
   && python3 -m pip install --no-cache-dir "pipenv>=2022.9.8"
