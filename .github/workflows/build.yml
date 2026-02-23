@@ -388,7 +388,7 @@ jobs:
           path: ${{ env.PIP_CACHE_DIR }}
           key: >-
             ${{ env.BASE_CACHE_KEY }}${{
-            hashFiles('build/pyproject.toml') }}
+            hashFiles('build/Pipfile.lock') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Manipulate the repo name into the preferred format
