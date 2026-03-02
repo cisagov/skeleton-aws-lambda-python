@@ -294,7 +294,7 @@ jobs:
       - name: Generate the Lambda deployment package
         run: docker compose up build_deployment_package
       - name: Upload the generated Lambda deployment package as an artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ github.event.repository.name }}-${{ env.GH_SHORT_SHA }}
           path: ${{ env.DEFAULT_ARTIFACT_NAME }}
