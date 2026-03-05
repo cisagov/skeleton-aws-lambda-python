@@ -285,9 +285,6 @@ jobs:
           # this workflow.
           permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v7
-      - name: Get the short SHA for the commit being used
-        run: |
-          echo "GH_SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Build the base Lambda Docker image
         run: |
           docker compose build build_deployment_package
@@ -296,7 +293,7 @@ jobs:
       - name: Upload the generated Lambda deployment package as an artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ github.event.repository.name }}-${{ env.GH_SHORT_SHA }}
+          archive: false
           path: ${{ env.DEFAULT_ARTIFACT_NAME }}
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
