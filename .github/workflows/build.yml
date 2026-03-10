@@ -329,6 +329,7 @@ jobs:
     permissions:
       # Allows us to read the SBOM artifact
       actions: read
+      # Necessary to create the artifact storage record
       artifact-metadata: write
       attestations: write
       # Allows us to add the SBOM to the release.  Also,
