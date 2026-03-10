@@ -265,6 +265,18 @@ jobs:
       - diagnostics
       - lint
       - test
+    permissions:
+      # Allows us to read the artifacts
+      actions: read
+      # Necessary to create the artifact storage record
+      artifact-metadata: write
+      attestations: write
+      # Allows us to add the SBOM to the release.  Also,
+      # actions/checkout needs read permission to fetch code.
+      contents: write
+      # Allows the workflow to mint the OIDC token necessary to
+      # request a Sigstore signing certificate.
+      id-token: write
     steps:
       - name: Apply standard cisagov job preamble
         uses: cisagov/action-job-preamble@v1
@@ -306,6 +318,10 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-${{ env.GH_SHORT_SHA }}
           path: ${{ env.DEFAULT_ARTIFACT_NAME }}
+      - name: Create provenance attestation for Lambda deployment package
+        uses: actions/attest@v4
+        with:
+          subject-path: ${{ env.DEFAULT_ARTIFACT_NAME }}
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
