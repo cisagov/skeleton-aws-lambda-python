@@ -432,10 +432,15 @@ jobs:
           subject-path: >-
             ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
             matrix.sbom-format }}
+      - name: Download Lambda package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lambda_build
+          path: build
       - name: Create SBOM attestation for Lambda package
         uses: actions/attest@v4
         with:
           sbom-path: >-
             ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
             matrix.sbom-format }}
-          subject-path: build/Pipfile.lock
+          subject-path: build/lambda_build.zip
