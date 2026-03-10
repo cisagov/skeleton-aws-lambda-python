@@ -265,6 +265,18 @@ jobs:
       - diagnostics
       - lint
       - test
+    permissions:
+      # Allows us to read the artifacts
+      actions: read
+      # Necessary to create the artifact storage record
+      artifact-metadata: write
+      attestations: write
+      # Allows us to add the SBOM to the release.  Also,
+      # actions/checkout needs read permission to fetch code.
+      contents: read
+      # Allows the workflow to mint the OIDC token necessary to
+      # request a Sigstore signing certificate.
+      id-token: write
     steps:
       - name: Apply standard cisagov job preamble
         uses: cisagov/action-job-preamble@v1
@@ -306,6 +318,129 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-${{ env.GH_SHORT_SHA }}
           path: ${{ env.DEFAULT_ARTIFACT_NAME }}
+      - name: Create provenance attestation for Lambda deployment package
+        uses: actions/attest@v4
+        with:
+          subject-path: ${{ env.DEFAULT_ARTIFACT_NAME }}
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
+  generate-sbom:
+    # Generate an SBOM from the Pipfile.lock file and, if there is a
+    # release, upload it as an asset to the release.
+    #
+    # This job is located in this workflow as opposed to a separate
+    # release workflow because it only makes sense to run it after the
+    # build job.  Putting it in a separate release workflow would
+    # require us to introduce a dependency of the release workflow on
+    # this one.
+    #
+    # This if statement is present to keep the push and pull_request
+    # events from both causing the job to be run.
+    if: github.event_name != 'pull_request'
+    name: Generate and upload SBOM
+    needs:
+      - build
+      - diagnostics
+    permissions:
+      # Allows us to read the SBOM artifact
+      actions: read
+      # Necessary to create the artifact storage record
+      artifact-metadata: write
+      attestations: write
+      # Allows us to add the SBOM to the release.  Also,
+      # actions/checkout needs read permission to fetch code.
+      contents: write
+      # Allows the workflow to mint the OIDC token necessary to
+      # request a Sigstore signing certificate.
+      id-token: write
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sbom-format:
+          - cyclonedx-json
+          - spdx-json
+    steps:
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
+        with:
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-docker#224 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - id: setup-env
+        uses: cisagov/setup-env-github-action@v1
+      - uses: actions/checkout@v6
+      - id: setup-python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ steps.setup-env.outputs.python-version }}
+      - uses: actions/cache@v5
+        env:
+          BASE_CACHE_KEY: >-
+            ${{ github.job }}-${{
+            runner.os }}-${{ runner.arch }}-py${{
+            steps.setup-python.outputs.python-version }}-
+        with:
+          path: ${{ env.PIP_CACHE_DIR }}
+          key: >-
+            ${{ env.BASE_CACHE_KEY }}${{
+            hashFiles('build/Pipfile.lock') }}
+          restore-keys: |
+            ${{ env.BASE_CACHE_KEY }}
+      - name: Manipulate the repo name into the preferred format
+        id: manipulate-repo-name
+        run: |
+          NEW_NAME=$(echo "${{ github.repository}}" \
+          | tr '[:upper:]' '[:lower:]' \
+          | tr '/ ' '-')
+          echo "repo-name=${NEW_NAME}" >> $GITHUB_OUTPUT
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          artifact-name: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
+            matrix.sbom-format }}
+          file: build/Pipfile.lock
+          format: ${{ matrix.sbom-format }}
+          output-file: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
+            matrix.sbom-format }}
+      - name: Create provenance attestation for SBOM
+        uses: actions/attest@v4
+        with:
+          subject-path: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
+            matrix.sbom-format }}
+      - name: Download Lambda package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lambda_build
+          path: build
+      - name: Create SBOM attestation for Lambda package
+        uses: actions/attest@v4
+        with:
+          sbom-path: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.${{
+            matrix.sbom-format }}
+          subject-path: build/lambda_build.zip
