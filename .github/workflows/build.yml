@@ -273,7 +273,7 @@ jobs:
       attestations: write
       # Allows us to add the SBOM to the release.  Also,
       # actions/checkout needs read permission to fetch code.
-      contents: write
+      contents: read
       # Allows the workflow to mint the OIDC token necessary to
       # request a Sigstore signing certificate.
       id-token: write
